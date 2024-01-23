@@ -1,6 +1,11 @@
-importScripts('https://www.gstatic.com/firebasejs/10.7.2/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/10.7.2/firebase-messaging-compat.js');
+// Scripts for firebase and firebase messaging
+importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js");
+importScripts(
+    "https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"
+);
 
+// Initialize the Firebase app in the service worker
+// "Default" Firebase configuration (prevents errors)
 const firebaseConfig = {
     apiKey: "AIzaSyA1J7Jga3G5Ya0jY_hbN-7EykTQN_pL2XY",
     authDomain: "test-33f42.firebaseapp.com",
@@ -13,10 +18,15 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+// Retrieve firebase messaging
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-    console.log('Received background message', payload);
-    // Customize the way you handle the notification when the app is in the background or closed
-});
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+        icon: payload.notification.image,
+    };
 
+    self.registration.showNotification(notificationTitle, notificationOptions);
+});
